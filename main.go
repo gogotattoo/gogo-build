@@ -1,23 +1,25 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 )
 
 func main() {
 	renderSite("gogo.tattoo", "http")
-	//renderSite("gogotattoo.github.io", "https")
-
+	renderSite("gogotattoo.github.io", "https")
 }
 
 func renderSite(out, protocol string) {
+	os.Remove("gogo.tattoo")
 	gopath := os.Getenv("GOPATH")
 	gogotattooPrefix := "/src/github.com/gogotattoo/"
-	artists := []string{"xizi"}
+	artists := []string{"xizi", "gogo", "aid"}
 	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
 		log.Fatal(err)
@@ -39,18 +41,40 @@ func renderMainSite(source, destination, baseURL string) {
 }
 
 var filesToDelete []string
+var filesToCopy []string
 
-func addLocalizedFiles(path string, info os.FileInfo, err error) error {
-	newPath := path[:len(path)-3] + ".zh.md"
-	er := copyFile(path, newPath)
-	if er == nil {
-		filesToDelete = append(filesToDelete, newPath)
+func collectLocalizedFiles(path string, info os.FileInfo, err error) error {
+	if strings.HasSuffix(path, ".md") {
+		filesToCopy = append(filesToCopy, path)
 	}
 	return nil
 }
 
+func addNewLocalizedFile(path, res string) {
+	if len(path) == 0 {
+		return
+	}
+	newPath := path[:len(path)-3] + res
+	er := copyFile(newPath, path)
+	if er == nil {
+		filesToDelete = append(filesToDelete, newPath)
+	}
+}
 func renderArtistSite(source, destination, baseURL string) {
-	filepath.Walk(source+"/content/design", addLocalizedFiles)
+	filesToDelete = make([]string, 100)
+	filesToCopy = make([]string, 100)
+	filepath.Walk(source+"/content/", collectLocalizedFiles)
+	fmt.Println(filesToCopy)
+	for _, fName := range filesToCopy {
+		//fmt.Println(fName)
+		addNewLocalizedFile(fName, ".zh.md")
+		//addNewLocalizedFile(fName, ".zh-hant.md")
+		//addNewLocalizedFile(fName, ".ru.md")
+	}
+	renderMainSite(source, destination, baseURL)
+	for _, fName := range filesToDelete {
+		os.Remove(fName)
+	}
 }
 func copyFile(dst, src string) error {
 	in, err := os.Open(src)

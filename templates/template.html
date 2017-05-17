@@ -1,0 +1,34 @@
+<center>
+***{{.Work.Title}}***
+[gogo.tattoo/{{.Work.Link}}](http://gogo.tattoo/{{.Work.Link}})
+https://gateway.ipfs.io/ipfs/{{.Work.ImageIpfs}}
+
+---------------
+***Process***
+[gogo.tattoo/{{.Work.Link}}](http://gogo.tattoo/{{.Work.Link}})
+{{ range .Work.ImagesIpfs }}
+https://gateway.ipfs.io/ipfs/{{.}}
+{{ end }}
+
+***Final***
+https://gateway.ipfs.io/ipfs/{{.Work.ImageIpfs}}
+
+Artist:  [{{.Artist | title }}](http://gogo.tattoo/{{.Artist}})
+Tattoo Made: {{.Work.MadeDate | fdate }}
+[Published](http://gogo.tattoo/{{.Work.Link}}): {{.Work.PublishDate | fdate}}
+Location: {{ .Work.LocationCity -}}, {{ .Work.LocationCountry -}}
+{{ with .Work.MadeAtShop}}
+Studio: [@{{.}}](http://gogo.tattoo/@{{.}})
+{{ end }}
+Tags: {{ range $index, $element := .Work.Tags -}}
+      {{ if $index }}, {{ end -}}
+       [{{ $element }}](http://gogo.tattoo/{{$.Artist}}/tags/{{ $element }})
+{{- end }}
+<br>
+...QR code...
+https://gateway.ipfs.io/ipfs/{{$.QRhash}}
+<br>
+Dear tattoo owner, please feel free to tell us the story of your tattoo.
+亲爱的客人们，让我们承载您们的纹身故事吧！
+Мы с нетерпением ждём историю тату от автора и её владельца!
+</center>

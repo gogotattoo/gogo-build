@@ -1,0 +1,38 @@
+<center>
+***{{.Work.Title}}***
+[gogo.tattoo/{{.Work.Link}}](http://gogo.tattoo/{{.Work.Link}})
+https://gateway.ipfs.io/ipfs/{{.Work.ImageIpfs}}
+
+---------------
+</center>
+<center>
+***Процесс***
+[gogo.tattoo/{{.Work.Link}}](http://gogo.tattoo/{{.Work.Link}})
+{{ range .Work.ImagesIpfs }}
+https://gateway.ipfs.io/ipfs/{{.}}
+{{ end }}
+</center>
+<center>
+***Результат***
+https://gateway.ipfs.io/ipfs/{{.Work.ImageIpfs}}
+</center>
+<center>
+Автор:  [{{ .Artist | title }}](http://gogo.tattoo/{{.Artist}}/ru)
+Тату сделана: {{.Work.MadeDate | fdate }}
+[Опубликована](http://gogo.tattoo/{{.Work.Link}}): {{.Work.PublishDate | fdate }}
+Место: {{.Work.LocationCity}}, {{ .Work.LocationCountry -}}
+{{- with .Work.MadeAtShop}}
+Студия: [@{{.}}](http://gogo.tattoo/@{{.}})
+{{- end }}
+Тэги: {{ range $index, $element := .Work.Tags -}}
+      {{ if $index }}, {{ end -}}
+       [{{ $element }}](http://gogo.tattoo/{{ $.Artist }}/ru/tags/{{ $element }})
+{{- end }}
+</center>
+<center>
+<br>
+https://gateway.ipfs.io/ipfs/{{$.QRhash}}
+<br>
+Мы с нетерпением ждём историю тату от автора и её владельца!
+
+</center>

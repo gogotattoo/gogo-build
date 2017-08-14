@@ -6,10 +6,19 @@ https://gateway.ipfs.io/ipfs/{{.Work.ImageIpfs}}
 ---------------
 </center>
 <center>
+{{range $index, $element := .Work.VideosIpfs -}}
+[***Видео {{add $index 1}}***](https://gateway.ipfs.io/ipfs/{{$element}})
+
+{{- end }}
 ***Процесс***
 [gogo.tattoo/{{.Work.Link}}](http://gogo.tattoo/{{.Work.Link}})
 {{ range .Work.ImagesIpfs }}
 https://gateway.ipfs.io/ipfs/{{.}}
+{{ end }}
+</center>
+<center>
+{{range $index, $element := .Work.VideosIpfs }}
+[***Видео {{add $index 1}}***](https://gateway.ipfs.io/ipfs/{{$element}})
 {{ end }}
 </center>
 <center>
@@ -23,6 +32,9 @@ https://gateway.ipfs.io/ipfs/{{.Work.ImageIpfs}}
 Место: {{.Work.LocationCity}}, {{ .Work.LocationCountry -}}
 {{- with .Work.MadeAtShop}}
 Студия: [@{{.}}](http://gogo.tattoo/@{{.}})
+{{- end }}
+{{- with .Work.Previous }}
+Предыдущая: [gogo.tattoo/{{.}}](http://gogo.tattoo/{{.}})
 {{- end }}
 Тэги: {{ range $index, $element := .Work.Tags -}}
       {{ if $index }}, {{ end -}}

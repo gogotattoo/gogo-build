@@ -90,9 +90,14 @@ func renderIntoArticle() {
 
 }
 
+func add(x, y int) int {
+	return x + y
+}
+
 func renderArticleTemplate(tmpl string, work models.Artwork) {
 	funcMap := template.FuncMap{
 		"title": strings.Title,
+		"add":   add,
 		"fdate": func(date string) string {
 			t, e := time.Parse(time.RFC3339, date)
 			if e != nil {
@@ -110,6 +115,13 @@ func renderArticleTemplate(tmpl string, work models.Artwork) {
 		work.Link += "/" + lang
 	}
 	work.Link += "/" + workType + "/" + shortName
+	if work.Previous != "" {
+		previousLink := artist
+		if len(lang) > 0 {
+			previousLink += "/" + lang
+		}
+		work.Previous = previousLink + "/" + workType + "/" + work.Previous
+	}
 
 	qrLink := "http://gogo.tattoo/" + work.Link + "?utm_medium=qrcode&utm_source="
 	source := "steemit"
@@ -135,7 +147,7 @@ func renderSite(out, protocol string) {
 	os.Remove("gogo.tattoo")
 	gopath := os.Getenv("GOPATH")
 	gogotattooPrefix := "/src/github.com/gogotattoo/"
-	artists := []string{"xizi", "gogo", "aid", "kate", "klimin", "jiaye"}
+	artists := []string{"xizi", "gogo", "aid", "kate", "klimin", "gabchik", "aidehua", "zhenfeng"}
 	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
 		log.Fatal(err)
@@ -180,7 +192,7 @@ func renderArtistSite(source, destination, baseURL string) {
 	filesToDelete = make([]string, 100)
 	filesToCopy = make([]string, 100)
 	filepath.Walk(source+"/content/", collectLocalizedFiles)
-	fmt.Println(filesToCopy)
+	//fmt.Println(filesToCopy)
 	for _, fName := range filesToCopy {
 		//fmt.Println(fName)
 		addNewLocalizedFile(fName, ".zh.md")

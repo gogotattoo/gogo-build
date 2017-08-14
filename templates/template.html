@@ -1,13 +1,25 @@
+{{.Work.Link}}
+
 <center>
 ***{{.Work.Title}}***
 [gogo.tattoo/{{.Work.Link}}](http://gogo.tattoo/{{.Work.Link}})
 https://gateway.ipfs.io/ipfs/{{.Work.ImageIpfs}}
 
+
+{{range $index, $element := .Work.VideosIpfs -}}
+[***Video {{add $index 1}}***](https://gateway.ipfs.io/ipfs/{{$element}})
+{{- end }}
+
 ---------------
 ***Process***
+
 [gogo.tattoo/{{.Work.Link}}](http://gogo.tattoo/{{.Work.Link}})
 {{ range .Work.ImagesIpfs }}
 https://gateway.ipfs.io/ipfs/{{.}}
+{{ end }}
+
+{{ range $index, $element := .Work.VideosIpfs }}
+[***Video {{add $index 1}}***](https://gateway.ipfs.io/ipfs/{{$element}})
 {{ end }}
 
 ***Final***
@@ -17,9 +29,12 @@ Artist:  [{{.Artist | title }}](http://gogo.tattoo/{{.Artist}})
 Tattoo Made: {{.Work.MadeDate | fdate }}
 [Published](http://gogo.tattoo/{{.Work.Link}}): {{.Work.PublishDate | fdate}}
 Location: {{ .Work.LocationCity -}}, {{ .Work.LocationCountry -}}
-{{ with .Work.MadeAtShop}}
+{{ with .Work.Previous }}
+Previous: [gogo.tattoo/{{.}}](http://gogo.tattoo/{{.}})
+{{- end }}
+{{- with .Work.MadeAtShop}}
 Studio: [@{{.}}](http://gogo.tattoo/@{{.}})
-{{ end }}
+{{- end }}
 Tags: {{ range $index, $element := .Work.Tags -}}
       {{ if $index }}, {{ end -}}
        [{{ $element }}](http://gogo.tattoo/{{$.Artist}}/tags/{{ $element }})
